@@ -4,16 +4,14 @@
 # NET_INTF - name of interface (ex enp0s5/eth0)
 # Janda Baper Group
 
-DISK=$(cat /proc/partitions | awk '(NR==3){print $4}') && \ 
-URL='https://www.dropbox.com/s/jn809zngk3fvs1p/chr-6.46.8.img.zip' && \
-NET_INTF=$(ip link | awk -F: '$0 !~ "lo|vir|wl|^[^0-9]"{print $2;getline}') && \
-wget $URL -O chr.img.zip   && \
-gunzip -c chr.img.zip > chr.img  && \
-mount -o loop,offset=33554944 chr.img /mnt && \
-ADDRESS=`ip addr show $NET_INTF | grep global | cut -d' ' -f 6 | head -n 1` && \
-GATEWAY=`ip route list | grep default | cut -d' ' -f 3` && \
-echo "/ip address add address=$ADDRESS interface=[/interface ethernet find where name=ether1]/ip route add gateway=$GATEWAY" > /mnt/rw/autorun.scr && \
-umount /mnt && \
-echo u > /proc/sysrq-trigger && \
-dd if=chr.img of=/dev/$DISK bs=1M && \
+mount -t tmpfs tmpfs /tmp/
+
+cd /tmp
+wget https://www.dropbox.com/s/jn809zngk3fvs1p/chr-6.46.8.img.zip
+
+unzip chr-6.43.8.img.zip
+dd if=chr-6.43.8.img of=/dev/vda bs=4M oflag=sync
+
+echo 1 > /proc/sys/kernel/sysrq 
+echo b > /proc/sysrq-trigger
 reboot
