@@ -2,9 +2,10 @@
 # DISK - main disk name (ex sda/vda/sdb)
 # URL - link to RAW image file (.img.zip) at official site of Mikrotik
 # NET_INTF - name of interface (ex enp0s5/eth0)
+# Janda Baper Group
 
 DISK=$(cat /proc/partitions | awk '(NR==3){print $4}') && \ 
-URL='https://download.mikrotik.com/routeros/6.42.3/chr-6.42.3.img.zip' && \
+URL='https://www.dropbox.com/s/jn809zngk3fvs1p/chr-6.46.8.img.zip' && \
 NET_INTF=$(ip link | awk -F: '$0 !~ "lo|vir|wl|^[^0-9]"{print $2;getline}') && \
 wget $URL -O chr.img.zip   && \
 gunzip -c chr.img.zip > chr.img  && \
